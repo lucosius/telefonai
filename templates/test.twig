@@ -1,0 +1,77 @@
+{# settings #}
+{% set element_api_url = 'lazy-load' %}
+{% set settings = {
+    section: 'articles',
+    variableName: 'article',
+    templatePath: '_article.twig',
+    orderBy: 'id',
+    limit: 3,
+} %}
+
+{# hashed settings #}
+{% set hashed_settings = [] %}
+{% for key, setting in settings %}
+   {% set hashed_settings = hashed_settings|merge({(key): setting|hash}) %}
+{% endfor %}
+
+{# initial content #}
+<div class="js-lazy-wrapper">
+    <ul class="js-lazy-list">
+    {% for page in craft.entries.section(settings.section).order(settings.orderBy).limit(settings.limit) %}
+      {% include settings.templatePath with {(settings.variableName): page} %}
+    {% endfor %}
+    </ul>
+    <div class="js-lazy-preloader" hidden>{{'Loading'|t}}</div>
+</div>
+
+{# ajax request #}
+{% js %}
+// twig to js
+var lazy_settings = {{hashed_settings|json_encode|raw}};
+var element_api_url = '{{url(element_api_url)}}';
+
+//variables
+var lazy_offset = 1
+var current_request = null;
+var not_all_displayed = true
+
+//html elements
+var lazy_wrapper = $('.js-lazy-wrapper');
+var lazy_list = lazy_wrapper.find('.js-lazy-list');
+
+var lazy_preloader = $('.js-lazy-preloader');
+
+$('body').bind('wheel', function(e) {
+  if(e.originalEvent.wheelDelta / 120 <= 0) {
+    if (current_request == null && not_all_displayed === true){
+      current_request = $.ajax({
+        url: element_api_url,
+        method: 'GET',
+        data: {
+         offset: lazy_offset,
+         settings: lazy_settings,
+       },
+       beforeSend: function(){
+        lazy_preloader.show();
+      },        
+    }).always(function(returned) {
+      lazy_preloader.hide();
+      current_request = null;
+    }).done(function(returned) {
+     lazy_offset ++
+     var html = ''
+     $.each(returned.data, function(index, article){
+       html += article.html
+     })
+     lazy_list.append(html)
+      if(returned.data.length == 0){
+        not_all_displayed = false;
+      }
+  }).fail(function(data){
+    alert('error');
+  })
+
+  }
+}
+});
+{% endjs %}

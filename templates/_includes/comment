@@ -1,0 +1,31 @@
+<div class="comments" id="comment-{{ comment.id }}" data-id="{{ comment.id }}" data-site-id="{{ comment.siteId }}" data-role="comment" itemprop="comment" itemscope itemtype="http://schema.org/UserComments">
+    <div class="row mt-5">
+    {% if comment.can('showAvatar') %}
+     <figure itemprop="creator" itemscope itemtype="http://schema.org/Person">
+    	<div class="col-2">
+            {% set avatar = comment.getAvatar() %}
+
+                {% if avatar %}
+                    <img src="{{ avatar.url({ width: 70, height: 70, mode: 'fit' }) }}" alt="avatar"/>
+                    
+                {% else %}
+                    <span class="cc-i-image-icon"></span>
+                {% endif %}
+			 </div>
+        </figure>
+    {% endif %}
+    
+    <div class="col-10" data-role="wrap-content">
+     <div data-role="content">
+     <span itemprop="creator" itemscope itemtype="http://schema.org/Person">
+				<b itemprop="name"> {{- comment.author.fullName ?? comment.author -}}</b> <small
+					class="text-muted ml-3">{% if comment.can('showTimeAgo') %}
+                    
+                            <time itemprop="commentTime" title="{{ comment.commentDate | date('D M j Y H:i:s \\G\\M\\TO (T)') }}" datetime="{{ comment.commentDate | date('c') }}">{{ comment.timeAgo | trim }}</time>
+                        
+                {% endif %}</small></header><br/>
+			{{ comment.comment | nl2br }}<br/>
+            
+			</div>
+
+   </div>  </div> </div>

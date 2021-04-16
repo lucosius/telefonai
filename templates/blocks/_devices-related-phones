@@ -1,0 +1,28 @@
+<div class="top-list-row">
+						<div class="row align-items-center py-3">
+								<div class="col-3">
+								 {% set image = entry.irenginioNuotrauka[0] ?? null %}
+    {% if image %}
+        <img class="img-fluid lazy loaded" src="{{ image.url('smartphonesmall') }}" alt="{{ image.title }}">
+         {% else %}
+   <img class="img-fluid lazy loaded" src="https://testing.telefonai.eu/assets/nuotraukos/_900x500_scale_center-center_70_none/jbareham_171213_2180_0158.jpg"> 
+        {% endif %}
+	
+																	</div>
+
+							<div class="col-9">
+								<div class="row">
+									<div class="col-12">
+										<div class="device-name">
+											<a href="{{ entry.url }}">{{ entry.title }}</a>
+										</div>
+									</div>
+									<span class="col-6 device-specs"><i class="fas fa-expand-arrows-alt"></i> 
+									{{ entry.top_ekranas }}</span>
+									<span class="col-6 device-specs"><i class="fas fa-battery-three-quarters"></i> 
+									{{ entry.top_baterija }}</span>
+									<span class="col-12 release-date">Išleista: {{ entry.isleidimoData }} </span>
+									
+							</div>
+						</div>
+					</div></div>

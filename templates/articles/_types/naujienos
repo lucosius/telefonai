@@ -1,0 +1,150 @@
+{% extends "_html5" %}
+ {% set title = entry.title %}
+{% block body %}
+<div class="container">
+    <div class="row">
+{% set featureImage = {
+    mode: 'crop',
+    width: 900,
+    height: 600,
+    quality: 90
+} %}
+
+        <div class="col-12">
+          <hr class="mt-2" />
+      </div>
+<article class="col-12 col-md-8 mt-5">
+{% if entry.postCategories|length %}
+    {% for category in entry.postCategories.all() %}
+<ul class="breadcrumb">
+<li class="breadcrumb-item"><a href="{{ category.url }}">{{ category.title }} </a></li>
+<li class="breadcrumb-item"><a href="{{ category.url }}/{{ entry.type.handle }}">{{ entry.type.name }} </a></li>
+</ul>
+{% endfor %}
+  {% endif %} 
+        <h1 class="title-name">{{ entry.title }}</h1>
+        <div class="row mt-2">
+            <div class="col-12 mt-2">
+                                <div class="row">
+              <div class="col-6 col-lg-8 mt-2">
+              <span class="meta"><i class="far fa-clock"></i> {{ readTime(entry, false) }}</span>
+              <span class="meta"><i class="fas fa-calendar-alt"></i> {{ entry.postDate | date('Y-m-d, H:i') }}</span>
+              </div>
+
+              <div class="col-6 col-lg-4 align-items-center mt-2">
+<span class="author"><i class="fas fa-user"></i> <a href="/nariai/{{ entry.author.username }}">{{ entry.author.fullName }}</a></span>
+              </div>
+            </div>
+          </div>
+            <div class="col-12">
+            <div class="row mt-4">
+              <div class="col-12">
+              {% set image = entry.featureImage[0] ?? null %}
+    {% if image %}
+        <img class="img-text" src="{{ image.url('indexbig') }}" alt="{{ entry.title }}">
+         {% else %}
+   <img class="img-fluid" src="https://testing.telefonai.eu/assets/nuotraukos/_indexsmall/Apple_underwa-pagr.jpg"> 
+        {% endif %}   
+                                        
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="article-content">
+                       {% for block in entry.postContent.limit(1).all() %}
+      <div class="my-4">
+            {% if block.type == 'text' %}
+          {{ block.text }}
+        {% elseif block.type == 'image' %}
+          {% for image in block.image.all() %}
+            <img src="{{ image.url }}" alt="{{ image.title }}" />
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endfor %}
+
+     {% for tag in craft.tags.relatedTo(entry).all() %}
+        {% set limitCriteria = craft.entries.limit(4).all() %}
+{% set similarEntriesByTags = craft.similar.find({ element: entry, context: entry.temos, criteria: limitCriteria }) %}
+<h4 class="block-title">Susiję įrašai</h4>
+{% for similarEntry in similarEntriesByTags %}
+    <li><a href="{{ similarEntry.url }}">{{ similarEntry.title }}</a></li>
+{% endfor %}
+    {% endfor %}
+
+</div>
+          </div>
+
+          <div class="col-12">
+            <hr class="mt-5">
+
+                   {{ craft.comments.render(entry.id) }}
+
+          </div>
+</div>
+
+        <div class="row">
+    <div class="col-12 mt-5">
+      <h4 class="title-name">Daugiau įrašų</h4>
+    </div>
+
+     {% set entries = craft.entries
+    .section('articles')
+     .orderby('postDate desc')
+     .id('not ' ~ entry.id)
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+     .all() %}
+{% for entry in entries %}
+        <div class="col-6 col-md-6 col-lg-4 mt-5">
+{% include 'blocks/small/_article-with-category'  %}
+</div>
+    {% endfor %}
+</div>
+      </article>
+                  <div class="col-12 col-md-4 mt-5">
+
+
+{% set relatedEntries = craft.entries.section('devices').relatedTo(entry).limit(2) %}
+{% if relatedEntries|length %}
+<div class="block">
+  <h3 class="block-title has-badge mb-3">
+<span>Susiję telefonai</span>
+      </h3>
+
+      <div class="top-list">
+        {% for entry in relatedEntries.all() %}
+{% include 'blocks/_devices-related-phones'  %}
+{% endfor %}
+   </div>
+    </div>
+<div class="mt-5"></div>
+    {% endif %}
+                
+  <div class="block">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+{% set myEntryQuery = craft.entries.section('articles').orderByPopular('total', 1).limit(5) %}
+
+
+{# Fetch the entries #}
+{% set entries = myEntryQuery.all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> 
+    <div class="sticky-advert mt-5">{{ craft.adWizard.displayAd(38297) }}</div>
+    
+      </div>
+</div></div>
+{# render the image for registration #}
+{{ entry | views_work_image }}
+{% endblock %}       

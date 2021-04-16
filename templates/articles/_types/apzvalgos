@@ -1,0 +1,365 @@
+{% extends "_html5" %}
+ {% set title = entry.title %}
+{% block body %}
+<div class="container">
+		<div class="row">
+{% set featureImage = {
+    mode: 'crop',
+    width: 900,
+    height: 600,
+    quality: 90
+} %}
+
+        <div class="col-12">
+        	<hr class="mt-2" />
+      </div>
+<article class="col-12 col-md-8 mt-5">
+{% if entry.postCategories|length %}
+    {% for category in entry.postCategories.all() %}
+<ul class="breadcrumb">
+<li class="breadcrumb-item"><a href="{{ category.url }}">{{ category.title }} </a></li>
+<li class="breadcrumb-item"><a href="{{ category.url }}/{{ entry.type.handle }}">{{ entry.type.name }} </a></li>
+</ul>
+{% endfor %}
+  {% endif %} 
+				<h1 class="title-name">{{ entry.title }}</h1>
+				<div class="row mt-2">
+						<div class="col-12 mt-2">
+																<div class="row">
+							<div class="col-6 col-lg-8 mt-2">
+							<span class="meta"><i class="far fa-clock"></i> {{ readTime(entry, false) }}</span>
+							<span class="meta"><i class="fas fa-calendar-alt"></i> {{ entry.postDate | date('Y-m-d, H:i') }}</span>
+							</div>
+
+
+
+													
+
+							<div class="col-6 col-lg-4 align-items-center mt-2">
+<span class="author"><i class="fas fa-user"></i> <a href="/autorius/leonardas-sindaravicius-31">{{ entry.author.fullName }}</a></span>
+              </div>
+						</div>
+					</div>
+						<div class="col-12">
+						<div class="row mt-4">
+							<div class="col-12">
+					 {% set image = entry.featureImage[0] ?? null %}
+    {% if image %}
+        <img class="img-text" src="{{ image.url('cover') }}" alt="{{ entry.title }}">
+         {% else %}
+   <img class="img-fluid" src="https://testing.telefonai.eu/assets/nuotraukos/_indexsmall/Apple_underwa-pagr.jpg"> 
+        {% endif %}   
+                           
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="article-content">
+                       {% for block in entry.postContent.limit(1).all() %}
+      <div class="my-4">
+            {% if block.type == 'text' %}
+          {{ block.text }}
+        {% elseif block.type == 'image' %}
+          {% for image in block.image.all() %}
+            <img src="{{ image.url }}" alt="{{ image.title }}" />
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endfor %}
+
+     {% for tag in craft.tags.relatedTo(entry) %}
+        {% set limitCriteria = craft.entries.limit(4).all() %}
+{% set similarEntriesByTags = craft.similar.find({ element: entry, context: entry.temos, criteria: limitCriteria }) %}
+<h4 class="block-title">Susiję įrašai</h4>
+{% for similarEntry in similarEntriesByTags %}
+    <li><a href="{{ similarEntry.url }}">{{ similarEntry.title }}</a></li>
+{% endfor %}
+    {% endfor %}
+
+</div>
+					</div>
+
+					<div class="col-12">
+						<hr class="mt-5">
+
+                   {{ craft.comments.render(entry.id) }}
+
+					</div>
+</div>
+
+				<div class="row">
+		<div class="col-12 mt-5">
+			<h4 class="title-name">Daugiau įrašų</h4>
+		</div>
+
+{% set entries = craft.entries
+    .section('articles')
+     .orderby('postDate desc')
+     .id('not ' ~ entry.id)
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+     .all() %}
+{% for entry in entries %}
+        <div class="col-6 col-md-6 col-lg-4 mt-5">
+{% include 'blocks/small/_article-with-category'  %}
+</div>
+    {% endfor %}
+</div>
+			</article>
+            			<div class="col-12 col-md-4 mt-5">
+
+
+{% set relatedEntries = craft.entries.section('devices').relatedTo(entry).limit(2) %}
+{% if relatedEntries|length %}
+<div class="block">
+	<h3 class="block-title has-badge mb-3">
+<span>Susiję telefonai</span>
+      </h3>
+
+      <div class="top-list">
+      	{% for entry in relatedEntries.all() %}
+{% include 'blocks/_devices-related-phones'  %}
+{% endfor %}
+	 </div>
+    </div>
+
+    {% endif %}
+            		
+            		{# Setup an arry of the field handles you're interested in #}
+{% set fields = ['ekranas', 'dizainas', 'baterija', 'garsas', 'garsotakelis', 'grafika', 'istorija', 'kamera', 'veikla', 'valdymas', 'veikimas', 'zaismas'] %}
+
+{# set some defaults #}
+{% set totalAmount = 0 %}
+{% set totalFields = 0 %}
+
+{# loop through the field array #}
+{% for field in fields %}
+
+    {# grab the field's value from the entry #}
+    {% set value = attribute(entry, field) %}
+
+    {# skip over fields that were left blank, but count fields where 0 was entered #}
+    {% if value is not empty and value >= 0 %}
+
+        {# add to the running total and running number of fields with values #}
+        {% set totalAmount = totalAmount + value %}
+        {% set totalFields = totalFields + 1 %}
+
+    {% endif %}
+{% endfor %}
+<div class="block mt-5 device-rating-block">
+		<h3 class="block-title">
+			<span>Įvertinimas</span>
+			{% if totalFields > 0 %}<strong>{{ (totalAmount / totalFields)|number(decimals=1) }}</strong>
+{% endif %}
+		</h3>
+
+															
+{% if entry.dizainas %}
+<div class="device-rating-row">
+<div class="title">
+<span>Dizainas</span>
+<span>{{ entry.dizainas }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.dizainas }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}
+								
+{% if entry.veikimas %}
+<div class="device-rating-row">
+<div class="title">
+<span>Veikimas</span>
+<span>{{ entry.veikimas }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.veikimas }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}
+
+{% if entry.kamera %}
+<div class="device-rating-row">
+<div class="title">
+<span>Kamera</span>
+<span>{{ entry.kamera }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.kamera }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}
+
+{% if entry.baterija %}
+<div class="device-rating-row">
+<div class="title">
+<span>Baterija</span>
+<span>{{ entry.baterija }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.baterija }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}
+
+{% if entry.ekranas %}
+<div class="device-rating-row">
+<div class="title">
+<span>Ekranas</span>
+<span>{{ entry.ekranas }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.ekranas }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}
+
+{% if entry.garsas %}
+<div class="device-rating-row">
+<div class="title">
+<span>Garsas</span>
+<span>{{ entry.garsas }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.garsas }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}	
+
+{% if entry.valdymas %}
+<div class="device-rating-row">
+<div class="title">
+<span>Valdymas</span>
+<span>{{ entry.valdymas }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.valdymas }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}		
+
+{% if entry.veikla %}
+<div class="device-rating-row">
+<div class="title">
+<span>Sportinės veiklos sekimas</span>
+<span>{{ entry.veikla }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.veikla }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}	
+
+{% if entry.grafika %}
+<div class="device-rating-row">
+<div class="title">
+<span>Grafika</span>
+<span>{{ entry.grafika }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.grafika }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}		
+
+{% if entry.garsotakelis %}
+<div class="device-rating-row">
+<div class="title">
+<span>Garso takelis</span>
+<span>{{ entry.garsotakelis }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.garsotakelis }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}		
+
+{% if entry.istorija %}
+<div class="device-rating-row">
+<div class="title">
+<span>Istorija</span>
+<span>{{ entry.istorija }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.istorija }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}		
+
+{% if entry.zaismas %}
+<div class="device-rating-row">
+<div class="title">
+<span>Žaismas</span>
+<span>{{ entry.zaismas }}</span>
+</div>
+<div class="progress w-50p mt-2">
+<div class="progress-bar" style="width: {{ entry.zaismas }}0%;" role="progressbar" aria-valuenow="10" aria-valuemin="1" aria-valuemax="10"></div>
+</div>
+				</div>
+{% else %}
+{% endif %}						
+		
+{% if entry.privalumai|length %}
+<hr class="my-5">
+   <h3 class="block-title">Privalumai</h3>
+   <ul class="device-perks-list">
+        {% for row in entry.privalumai %}
+            <li class="benefit">{{ row.privalumai }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if entry.cons|length %}
+<hr class="my-5">
+   <h3 class="block-title">Trūkumai</h3>
+   <ul class="device-perks-list">
+        {% for row in entry.cons %}
+            <li class="negative">{{ row.trukumai }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+</div>
+
+  <div class="block mt-5">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+ {% set entries = craft.entries
+    .section('articles')
+    .orderByPopular('total', 1)
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(5)
+     .all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> 
+    <div class="sticky-advert mt-5">{{ craft.adWizard.displayAd(38297) }}</div>
+    
+			</div>
+</div></div>
+{# render the image for registration #}
+{{ entry | views_work_image }}
+{% endblock %}       

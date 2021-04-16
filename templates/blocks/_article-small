@@ -1,0 +1,25 @@
+<div class="top-list-row">
+						<a href="{{ entry.url }}" class="overflown-link"></a>
+
+						<div class="row align-items-center py-3">
+								<div class="col-3">
+								      {% set image = entry.featureImage[0] ?? null %}
+    {% if image %}
+        <img class="img-text" src="{{ image.url('sidebarsmall') }}" alt="{{ image.title }}">
+         {% else %}
+   <img class="img-text" src="https://testing.telefonai.eu/assets/nuotraukos/_900x500_scale_center-center_70_none/jbareham_171213_2180_0158.jpg"> 
+        {% endif %}
+
+																	</div>
+
+							<div class="col-9">
+								<div class="row">
+									<div class="col-12">
+										<div class="top--device-name">
+											{{ entry.title }}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>

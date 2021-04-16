@@ -1,0 +1,8 @@
+{% if craft.app.request.isMobileBrowser() %}
+   
+        {% include "mobile.twig" %}
+
+{% else %}
+  
+        {% include "index.twig" %}
+{% endif %}

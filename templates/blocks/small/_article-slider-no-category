@@ -1,0 +1,38 @@
+{# Setup an arry of the field handles you're interested in #}
+{% set fields = ['ekranas', 'dizainas', 'baterija', 'garsas', 'garsotakelis', 'grafika', 'istorija', 'kamera', 'veikla', 'valdymas', 'veikimas', 'zaismas'] %}
+
+{# set some defaults #}
+{% set totalAmount = 0 %}
+{% set totalFields = 0 %}
+
+{# loop through the field array #}
+{% for field in fields %}
+
+    {# grab the field's value from the entry #}
+    {% set value = attribute(entry, field) %}
+
+    {# skip over fields that were left blank, but count fields where 0 was entered #}
+    {% if value is not empty and value >= 0 %}
+
+        {# add to the running total and running number of fields with values #}
+        {% set totalAmount = totalAmount + value %}
+        {% set totalFields = totalFields + 1 %}
+
+    {% endif %}
+{% endfor %}
+<div class="slider-item col-12">
+<div class="item-block">
+      {% set image = entry.featureImage[0] ?? null %}
+    {% if image %}
+        <img class="img-text" src="{{ image.url('slider') }}" alt="{{ entry.title }}">
+         {% else %}
+   <img class="img-text" src="https://testing.telefonai.eu/assets/nuotraukos/_slider/EarFun-Free-Pro-apzvalga-ikrovimo-dezute_2021-04-12-093727.jpeg" alt="{{ entry.title }}"> 
+        {% endif %}
+<div class="heading-title mt-4">
+{% if totalFields > 0 %}<span class="review-score"><i class="fas fa-star"></i> {{ (totalAmount / totalFields)|number(decimals=1) }}</span>
+{% endif %}
+<a href="{{ entry.url }}">{{ entry.title }}</a> {% if entry.trumpasPavadinimas|length %}<small>{{ entry.trumpasPavadinimas }}</small>{% endif %} <span>({{ entry.viewsWork.total }})</span> 
+</div>
+
+</div>
+  </div>

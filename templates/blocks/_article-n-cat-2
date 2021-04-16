@@ -1,0 +1,45 @@
+{# Setup an arry of the field handles you're interested in #}
+{% set fields = ['ekranas', 'dizainas', 'baterija', 'garsas', 'garsotakelis', 'grafika', 'istorija', 'kamera', 'veikla', 'valdymas', 'veikimas', 'zaismas'] %}
+
+{# set some defaults #}
+{% set totalAmount = 0 %}
+{% set totalFields = 0 %}
+
+{# loop through the field array #}
+{% for field in fields %}
+
+    {# grab the field's value from the entry #}
+    {% set value = attribute(entry, field) %}
+
+    {# skip over fields that were left blank, but count fields where 0 was entered #}
+    {% if value is not empty and value >= 0 %}
+
+        {# add to the running total and running number of fields with values #}
+        {% set totalAmount = totalAmount + value %}
+        {% set totalFields = totalFields + 1 %}
+
+    {% endif %}
+{% endfor %}
+
+       {% set image = entry.featureImage[0] ?? null %}
+       {% set transforms = craft.imagerx.transformImage(image, 'heroImage') %}
+    {% if transforms %}
+            <img class="img-text" src="{{ image.url('indexmedium') }}" alt="{{ image.title }}">
+         {% else %}
+   <img class="img-text" src="https://testing.telefonai.eu/assets/nuotraukos/_900x500_scale_center-center_70_none/jbareham_171213_2180_0158.jpg"> 
+        {% endif %}
+       
+
+<div class="category-title mt-2">
+  {% set category = entry.postCategories[0] ?? null %}
+ {% if category %}
+       <a href="{{ category.url }}">
+        {{ category.title }}
+      </a>
+      {% endif %}
+  </div>
+<div class="heading-title">
+{% if totalFields > 0 %}<span class="review-score"><i class="fas fa-star"></i> {{ (totalAmount / totalFields)|number(decimals=1) }}</span>
+{% endif %}
+<a href="{{ entry.url }}">{{ entry.title }}</a> {% if entry.trumpasPavadinimas|length %}<small>{{ entry.trumpasPavadinimas }}</small>{% endif %} <span>({{ entry.viewsWork.total }})</span> 
+</div>

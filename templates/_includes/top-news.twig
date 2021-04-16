@@ -1,0 +1,161 @@
+<div class="row news-masonry">
+{% set myEntryQuery = craft.entries()
+    .section('articles')
+    .orderby('postDate desc')
+    .limit(1)
+%}
+{# Fetch the entries #}
+{% set entries = myEntryQuery.all() %}
+{% set featureImage = {
+mode: 'stretch',
+width: 400,
+height: 300,
+quality: 100
+} %}
+{% for entry in entries %}
+		<div class="col-12 col-md-6 mt-5">
+			<div class="item-block">
+						{% if entry.featureImage|length %}
+{% for image in entry.featureImage.all() %}<div class="item-bg" style="background-image: url('{{ image.getUrl(featureImage) }}')"></div>
+{% else %}
+<div class="item-bg" style="background-image: url('http://elmoto.lt/web/assets/kompiuteriai/LastPass-puslapis.jpg')"></div>
+                                {% endfor %}
+{% endif %}
+
+				<a href="{{ entry.url }}" class="item-info">
+
+				
+					<div class="category">{{ entry.postCategories.one() }} </div>
+				
+
+					<div class="title">
+							{{ entry.title }}
+						<span class="author">Paskelbė {{ entry.author.fullName }}</span>
+					</div>
+				</a>
+			</div>
+		</div>
+{% endfor %}
+
+	{% set myEntryQuery = craft.entries()
+     .section('articles')
+    .orderby('postDate desc')
+    .limit(1)
+    .offset(1)
+%}
+{# Fetch the entries #}
+{% set entries = myEntryQuery.all() %}
+{% set featureImage = {
+mode: 'fit',
+quality: 100
+} %}
+{% for entry in entries %}
+
+	<div class="col-12 col-md-6">
+			<div class="row">
+				<div class="col-12 mt-5">
+						<div class="top-images">
+							<div class="item-block">
+								{% if entry.featureImage|length %}
+{% for image in entry.featureImage.all() %}<div class="item-bg" style="background-image: url('{{ image.getUrl(featureImage) }}')"></div>
+{% else %}
+<div class="item-bg" style="background-image: url('http://elmoto.lt/web/assets/kompiuteriai/LastPass-puslapis.jpg')"></div>
+                                {% endfor %}
+{% endif %}
+
+
+	<a href="{{ entry.url }}" class="item-info">
+
+				
+						<div class="category">{{ entry.postCategories.one() }} </div>
+				
+
+					<div class="title">
+							{{ entry.title }}
+						<span class="author">Paskelbė {{ entry.author.fullName }}</span>
+					</div>
+				</a>
+			</div>
+		</div>
+				</div>
+			</div>
+	  {% endfor %}
+        	{% set myEntryQuery = craft.entries()
+    .section('articles')
+    .orderby('postDate desc')
+    .limit(1)
+    .offset(2)
+    %}
+{# Fetch the entries #}
+{% set entries = myEntryQuery.all() %}
+{% set featureImage = {
+mode: 'fit',
+quality: 100
+} %}
+{% for entry in entries %}
+		<div class="row">
+					<div class="col-6 mt-5">
+					<div class="item-block">
+						{% if entry.featureImage|length %}
+{% for image in entry.featureImage.all() %}<div class="item-bg" style="background-image: url('{{ image.getUrl(featureImage) }}')"></div>
+{% else %}
+<div class="item-bg" style="background-image: url('http://elmoto.lt/web/assets/kompiuteriai/LastPass-puslapis.jpg')"></div>
+                                {% endfor %}
+{% endif %}
+
+						<a href="{{ entry.url }}" class="item-info">
+
+				
+						<div class="category">{{ entry.postCategories.one() }} </div>
+				
+
+					<div class="title">
+							{{ entry.title }}
+						<span class="author">Paskelbė {{ entry.author.fullName }}</span>
+					</div>
+				</a>
+			</div>
+		</div>
+
+	  {% endfor %}
+
+		{% set myEntryQuery = craft.entries()
+    .section('articles')
+    .section('articles')
+    .orderby('postDate desc')
+    .limit(1)
+    .offset(3)
+%}
+{# Fetch the entries #}
+{% set entries = myEntryQuery.all() %}
+{% set featureImage = {
+mode: 'fit',
+quality: 100
+} %}
+{% for entry in entries %}
+				<div class="col-6 mt-3">
+					<div class="item-block">
+						{% if entry.featureImage|length %}
+{% for image in entry.featureImage.all() %}<div class="item-bg" style="background-image: url('{{ image.getUrl(featureImage) }}')"></div>
+{% else %}
+<div class="item-bg" style="background-image: url('http://elmoto.lt/web/assets/kompiuteriai/LastPass-puslapis.jpg')"></div>
+                                {% endfor %}
+{% endif %}
+
+											<a href="{{ entry.url }}" class="item-info">
+
+				
+							<div class="category">{{ entry.postCategories.one() }} </div>
+				
+
+					<div class="title">
+							{{ entry.title }}
+						<span class="author">Paskelbė {{ entry.author.fullName }}</span>
+					</div>
+				</a>
+			</div>
+		</div>
+	  {% endfor %}
+		</div>
+	</div>
+</div>
