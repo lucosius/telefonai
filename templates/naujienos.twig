@@ -1,0 +1,82 @@
+{% extends "_html5" %}
+ {% set title = 'Naujienos' %}
+{% block body %}       	
+<div class="container">
+		<div class="row">
+      <div class="col-12">
+          <hr class="mt-2" />
+      </div>
+		{% set settings =
+    {
+        lastSegmentTitle: element.customMenuTitle ?? title,
+        
+    }
+%}
+			<div class="col-8 mt-5">
+            <div class="row">
+<div class="col-8 col-md-6 col-lg-3"><h1 class="title-name">Naujienos</h3></div> 
+<div class="col-8 col-md-6 col-lg-9"><ul class="title-meniu">
+<li>Telefonai</li>
+<li>Kompiuteriai</li>
+<li>Auto</li>
+<li>Žaidimai</li>
+<li>Internetas</li>
+</ul></div>
+</div>
+			<div class="container row">
+     {% set query = craft.entries()
+     .section('articles')
+    .type('naujienos')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(15)
+    %}
+{% paginate query as pageInfo, pageEntries %}
+{% for entry in pageEntries %}
+ <div class="col-6 col-md-6 col-lg-4 mt-5 post">
+{% include 'blocks/small/_article-no-category'  %}
+</div>
+
+{% endfor %}
+</div>
+<div id="pagination">
+      {% if pageInfo.prevUrl %}
+          <a class="button left previous" href="{{ pageInfo.prevUrl }}">Previous</a>
+      {% endif %}
+      {% if pageInfo.nextUrl %}
+          <a class="button right next" href="{{ pageInfo.nextUrl }}">Next</a>
+      {% endif %}
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
+<div class="col-4 mt-5">
+<div class="block mt-5 mt-md-0">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+{% set myEntryQuery = craft.entries.section('articles').orderByPopular('total', 1).limit(5) %}
+
+
+{# Fetch the entries #}
+{% set entries = myEntryQuery.all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> 
+ <div class="sticky-advert mt-5">{{ craft.adWizard.displayAd(38297) }}</div>
+ </div>
+</div></div>
+</div>
+
+		</div>
+	</div>
+
+{% endblock %}

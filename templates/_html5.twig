@@ -1,0 +1,192 @@
+	<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ currentSite.language }}">
+<head>
+  {% block head %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <title>{% if title is defined %}{{ title }} - {% endif %}{{ siteName }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css"integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+	{% css "/assets/css/app.css" %}
+	{% css "/assets/css/custom.css" %}
+	  {% endblock %}
+</head>
+<body {{ attr(bodyAttributes ?? {}) }}>
+	<div class="page-wrapper">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div class="header">
+
+						<div class="col-md-2">
+							<a href="https://testing.telefonai.eu" class="logo">
+							<img src="https://telefonai.eu/images/telefonai-1.png" alt="telefonai.eu">
+						</a>
+		</div>
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-10">
+					 <div class="top-meniu">
+{% set nodes = craft.navigation.nodes('virsutinis').all() %}
+<ul class="meniu-list">
+    {% nav node in nodes %}
+        <li>
+            {{ node.link }}
+        </li>
+    {% endnav %}
+</ul>
+						</div>
+				</div>
+				<div class="col-md-2 login-area">
+{% if not currentUser %}
+<i class="fas fa-sign-in-alt"></i> Prisijungti: 
+<a href="{{ craft.social.getLoginUrl('google') }}"><i class="fab fa-google"></i></a>
+<a href="{{ craft.social.getLoginUrl('facebook') }}"><i class="fab fa-facebook-f"></i></a>
+{% endif %}
+{% if currentUser %}
+{{ "Prisijungęs kaip {name}"|t('app', { name: currentUser.friendlyName }) }}
+<a href="{{ logoutUrl }}"><i class="fas fa-sign-out-alt"></i></a>
+{% endif %}
+</div>
+			</div>
+			<hr class="mt-3 thin">
+			<div class="row mt-3 align-items-center">
+				<div class="col-md-9">
+					<div class="relevant">
+							<span><i class="fas fa-fire mr-2"></i> Populiaru:</span>
+							
+							{% set myEntryQuery = craft.entries.section('devices').orderByPopular('total', 1).limit(5) %}
+
+<ul class="relevant-list">
+{% set entries = myEntryQuery.all() %}
+{% for entry in entries %}
+ <li><a href="{{ entry.url }}">{{ entry.title }}</a></li>
+    {% endfor %}
+    </ul>
+						</div>
+				</div>
+				<div class="col-md-3">
+					<div class="search">
+						<form action="{{ url('paieska/rezultatai') }}">
+  <input type="search" name="q" aria-label="Search" placeholder="Paieška">
+</form>
+
+						</div>
+				</div>
+			</div>
+		</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<nav class="navbar navbar-expand-lg">
+			<div class="container">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<i class="fas fa-bars"></i>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarNav">
+{% set nodes = craft.navigation.nodes('pagrindinis') %}
+
+{% set nodes = craft.navigation.nodes()
+    .handle('pagrindinis')
+    .level(1)
+     %}
+
+<ul class="navbar-nav">
+    {% for node in nodes.all() %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ node.url }}">	<span>{{ node.title }}	</span></a>
+
+            {% if node.hasDescendants %}
+               <div class="sub-menu">
+                    {% for subnode in node.children.all() %}
+                       
+                             <a class="nav-link sub" href="{{ subnode.url }}">	<span>{{ subnode.title }}	</span></a>
+
+                            {% if subnode.hasDescendants %}
+                                
+                                    {% for subsubnode in subnode.children %}
+                                       	<a class="nav-link sub" href="{{ subsubnode.url }}">	<span>{{ subsubnode.title }}	</span></a>
+                                    {% endfor %}
+                               
+                            {% endif %}
+                        
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+					<div class="social-links-nav">
+						<a href="https://www.facebook.com/telefonaiEU/?ref=bookmarks" class="social-icon">
+							<i class="fab fa-facebook-f"></i>
+						</a>
+
+						<a href="https://youtube.com/telefonaieu" class="social-icon">
+							<i class="fab fa-youtube"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+        <div class="main-content" id="app">
+         {% set settings =
+    {
+        lastSegmentTitle: element.customMenuTitle ?? title,
+        
+    }
+%}
+    {% set breadcrumb = craft.breadcrumb.config(settings) %}
+  {% block body %}
+
+  {% endblock %}
+  </div>
+  <footer class="footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-3 col-md-1">
+						<img class="img-fluid lazy" src="https://telefonai.eu/images/logotipas-footer.png" alt="telefonai.eu">
+					</div>
+					<div class="col-9 col-md-9">
+						<p>
+							Copyright © Telefonai.eu 2020 . Visas turinys, jeigu nėra nurodytas kitas šaltinis, yra
+							portalo nuosavybė ir jį kopijuoti bei sutikimo yra draudžiama. Pranešimai spaudai ir kita –
+							press[eta]telefonai.eu.
+						</p>
+
+						<hr class="mt-5" />
+
+						<ul class="footer-menu mt-5">
+						
+								<li>
+									<a href="">test</a>
+								</li>
+						
+						</ul>
+					</div>
+
+					<div class="col-12 col-md-2 social">
+						<a href="" class="social-icon">
+							<i class="fab fa-facebook-f"></i>
+						</a>
+
+						<a href="" class="social-icon">
+							<i class="fab fa-instagram"></i>
+						</a>
+
+						<a href="" class="social-icon">
+							<i class="fab fa-youtube"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+	{% js "/assets/js/app.js" %}	
+	<script src="//unpkg.com/jscroll/dist/jquery.jscroll.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.1/js/lightbox.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,605 @@
+{% extends "_html5" %}
+{% set title = "Titulinis" %}
+{% block head %}
+{{ parent() }}
+{% endblock %}
+{% block body %}
+<div class="container">
+<div class="row">
+  <div class="col-8">
+  <section>
+<div class="row">
+  {% set entries = craft.entries
+    .section('articles')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(1)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-12 col-lg-12">
+{% include 'blocks/big/_article-with-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+{% set entries = craft.entries
+    .section('articles')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(2)
+    .offset(1)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-6 col-lg-6 mt-5">
+{% include 'blocks/medium/_article-with-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+{% set entries = craft.entries
+    .section('articles')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(3)
+    .offset(3)
+    .all() %}
+{% for entry in entries %}
+<div class="col-6 col-md-6 col-lg-4 mt-5">
+{% include 'blocks/small/_article-with-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<hr class="mt-5">
+<div class="row">
+<div class="col-8 col-md-6 col-lg-3 mt-4"><h3 class="title-name">Naujienos</h3></div> 
+<div class="col-8 col-md-6 col-lg-9 mt-4"><ul class="title-meniu">
+<li>Telefonai</li>
+<li>Kompiuteriai</li>
+<li>Auto</li>
+<li>Žaidimai</li>
+<li>Internetas</li>
+</ul></div>
+</div>
+<div class="row mt-3">
+{% set entries = craft.entries
+    .section('articles')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(2)
+    .offset(6)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-6 col-lg-6 mt-5">
+{% include 'blocks/medium/_article-with-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+ <div class="row">
+{% set entries = craft.entries
+    .section('articles')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+    .offset(8)
+    .all() %}
+{% for entry in entries %}
+<div class="col-6 col-md-6 col-lg-4 mt-5">
+{% include 'blocks/small/_article-with-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+</div>
+  <div class="col-4">
+
+  <div class="block mt-5 mt-md-0">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+ {% set entries = craft.entries
+    .section('articles')
+    .orderByPopular('total', 1)
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(5)
+     .all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> 
+ <div class="sticky-advert mt-5">{{ craft.adWizard.displayAd(38297) }}</div>
+ </div>
+</div>
+  </div>
+
+ <div class="container-fluid slider-container mt-5">
+    <div class="container">
+    <section>
+    <div class="row">
+<div class="col-8 col-md-6 col-lg-3 mt-5"><h3 class="title-name reviews">Naujausios apžvalgos</h3></div> 
+<div class="col-8 col-md-6 col-lg-9 mt-5"><ul class="title-meniu">
+<li>Telefonai</li>
+<li>Kompiuteriai</li>
+<li>Žaidimai</li>
+<li>Laikrodžiai</li>
+</ul></div>
+</div>
+
+   <div class="item-carousel row mt-5">  
+
+   {% set entries = craft.entries
+    .section('articles')
+    .type('apzvalgos')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+    .all() %}
+{% for entry in entries %}                   
+{% include 'blocks/small/_article-slider-with-category'  %}
+    {% endfor %}
+      </div>   
+    </section>
+  </div>
+</div>
+
+<div class="container">
+<div class="row">
+  <div class="col-8">
+   <section>
+   <div class="row mt-5">
+<div class="col-8 col-md-6 col-lg-3"><h3 class="title-name">Telefonai</h3></div> 
+<div class="col-8 col-md-6 col-lg-9"><ul class="title-meniu">
+<li>Naujienos</li>
+<li>Apžvalgos</li>
+<li>Patarimai</li>
+<li>Akcijos</li>
+</ul></div>
+</div>
+<div class="row mt-5">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('2')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(1)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-12 col-lg-12">
+{% include 'blocks/big/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('2')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(2)
+    .offset(1)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-6 col-lg-6 mt-5">
+{% include 'blocks/medium/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('2')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+    .offset(3)
+    .all() %}
+    {% for entry in entries %}
+<div class="col-6 col-md-6 col-lg-4 mt-5">
+{% include 'blocks/small/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<div class="col-12 col-md-12 mx-auto mt-5">
+     <a href="/telefonai/" class="btn btn-read-more">
+     <font style="vertical-align: inherit;">
+     <font style="vertical-align: inherit;">Rodyti visas telefonų naujienas</font>
+     </font></a> 
+    </div>
+</div>
+  <div class="col-4 mt-5">
+  <div class="block mt-5 mt-md-0">
+      <h3 class="block-title has-badge mb-3">
+       <span class="main-badge mr-3">NEW</span> <span>Naujausi telefonai</span>
+      </h3>
+
+      <div class="top-list">
+         {% set entries = craft.entries
+    .section('devices')
+     .type('telefonai')
+    .with([
+        'irenginioNuotrauka',
+        'postCategories'
+    ])
+    .limit(5)
+    .all() %}
+{% for entry in entries %}
+{% include 'blocks/_devices-related-phones'  %}
+    {% endfor %}
+    <div class="col-12 col-md-12 mx-auto mt-4">
+     <a href="irenginiai/telefonai/" class="btn btn-read-more">
+     <font style="vertical-align: inherit;">
+     <font style="vertical-align: inherit;">Daugiau telefonų</font>
+     </font></a> 
+    </div>
+ </div>
+    </div>
+
+  <div class="block mt-5">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+
+ {% set entries = craft.entries
+    .section('articles')
+    .orderByPopular('total', 1)
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(5)
+     .all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> </div>
+</div>
+  </div>
+
+  <div class="container-fluid slider-container mt-5">
+    <div class="container">
+    <section>
+    <div class="row">
+<div class="col-8 col-md-6 col-lg-3 mt-5"><h3 class="title-name gaming">Žaidimai</h3></div> 
+<div class="col-8 col-md-6 col-lg-9 mt-5"><ul class="title-meniu">
+<li>Naujienos</li>
+<li>Apžvalgos</li>
+<li>Patarimai</li>
+<li>Akcijos</li>
+</ul></div>
+</div>
+<div class="item-carousel row mt-5"> 
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('14')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+    .all() %}
+    {% for entry in entries %}                    
+{% include 'blocks/small/_article-slider-no-category'  %}
+    {% endfor %}
+      </div>   
+    </section>
+  </div>
+</div>
+
+<div class="container">
+<div class="row">
+  <div class="col-8">
+   <section>
+  <div class="row mt-5">
+<div class="col-8 col-md-6 col-lg-3"><h3 class="title-name">Auto</h3></div> 
+<div class="col-8 col-md-6 col-lg-9"><ul class="title-meniu">
+<li>Naujienos</li>
+<li>Apžvalgos</li>
+<li>Patarimai</li>
+</ul></div>
+</div>
+<div class="row mt-5">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('15')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(1)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-12 col-lg-12">
+{% include 'blocks/big/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('15')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(2)
+    .offset(1)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-6 col-lg-6 mt-5">
+{% include 'blocks/medium/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('15')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+    .offset(3)
+    .all() %}
+
+
+{% for entry in entries %}
+<div class="col-6 col-md-6 col-lg-4 mt-5">
+{% include 'blocks/small/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<div class="col-12 col-md-12 mx-auto mt-5">
+     <a href="/auto/" class="btn btn-read-more">
+     <font style="vertical-align: inherit;">
+     <font style="vertical-align: inherit;">Rodyti visas auto naujienas</font>
+     </font></a> 
+    </div>
+</div>
+  <div class="col-4 mt-5">
+      <div class="block mt-5 mt-md-0">
+      <h3 class="block-title has-badge mb-3">
+       <span class="main-badge mr-3">NEW</span> <span>Naujausi auto</span>
+      </h3>
+
+      <div class="top-list">
+         {% set entries = craft.entries
+    .section('devices')
+     .type('automobiliai')
+    .with([
+        'irenginioNuotrauka',
+        'postCategories'
+    ])
+    .limit(5)
+    .all() %}
+{% for entry in entries %}
+{% include 'blocks/_devices-related-auto'  %}
+    {% endfor %}
+
+    <div class="col-12 col-md-12 mx-auto mt-4">
+     <a href="irenginiai/automobiliai/" class="btn btn-read-more">
+     <font style="vertical-align: inherit;">
+     <font style="vertical-align: inherit;">Daugiau automobilių</font>
+     </font></a> 
+    </div>
+ </div>
+    </div>
+
+  <div class="block mt-5">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+ {% set entries = craft.entries
+    .section('articles')
+    .orderByPopular('total', 1)
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(5)
+     .all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> 
+    </div>
+</div>
+  </div>
+
+  <div class="container-fluid slider-container white mt-5">
+    <div class="container">
+    <section>
+    <div class="row">
+<div class="col-8 col-md-6 col-lg-4 mt-5"><h3 class="title-name wearables">Laikrodžiai ir apyrankės</h3></div> 
+<div class="col-8 col-md-6 col-lg-8 mt-5"><ul class="title-meniu">
+<li>Naujienos</li>
+<li>Apžvalgos</li>
+<li>Patarimai</li>
+<li>Akcijos</li>
+</ul></div>
+</div>
+<div class="item-carousel row mt-5">                     
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('8')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+     .all() %}
+{% for entry in entries %}
+{% include 'blocks/small/_article-slider-no-category'  %}
+    {% endfor %}
+      </div>   
+    </section>
+  </div>
+</div>
+
+<div class="container">
+<div class="row">
+  <div class="col-8">
+   <section>
+   <div class="row mt-5">
+<div class="col-8 col-md-6 col-lg-3"><h3 class="title-name">Kompiuteriai</h3></div> 
+<div class="col-8 col-md-6 col-lg-9"><ul class="title-meniu">
+<li>Naujienos</li>
+<li>Apžvalgos</li>
+<li>Patarimai</li>
+<li>Akcijos</li>
+</ul></div>
+</div>
+<div class="row mt-5">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('11')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(1)
+    .all() %}
+
+
+{% for entry in entries %}
+<div class="col-12 col-md-12 col-lg-12">
+{% include 'blocks/_article-w-cat-3'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+   {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('11')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(2)
+    .offset(1)
+    .all() %}
+{% for entry in entries %}
+<div class="col-12 col-md-6 col-lg-6 mt-5">
+{% include 'blocks/medium/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<div class="row">
+     {% set entries = craft.entries
+    .section('articles')
+    .relatedTo('11')
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(6)
+    .offset(3)
+    .all() %}
+
+{% for entry in entries %}
+<div class="col-6 col-md-6 col-lg-4 mt-5">
+{% include 'blocks/small/_article-no-category'  %}
+</div>
+{% endfor %}
+</div>
+</section>
+
+<div class="col-12 col-md-12 mx-auto mt-5">
+     <a href="/kompiuteriai/" class="btn btn-read-more">
+     <font style="vertical-align: inherit;">
+     <font style="vertical-align: inherit;">Rodyti visas kompiuterių naujienas</font>
+     </font></a> 
+    </div>
+</div>
+  <div class="col-4 mt-5">
+  <div class="block mt-5 mt-md-0">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+         {% set entries = craft.entries
+    .section('articles')
+    .orderByPopular('total', 1)
+    .with([
+        'featureImage',
+        'postCategories'
+    ])
+    .limit(5)
+     .all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> </div>
+</div>
+  </div>
+{% endblock %}

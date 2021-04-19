@@ -1,0 +1,101 @@
+{% extends "_html5" %}
+ {% set title = 'Naujienos' %}
+{% block body %}        
+{% set featureImage = {
+mode: 'scale',
+width: 550,
+height: 300,
+quality: 70
+} %}
+<div class="container">
+    <div class="row">
+      <div class="col-12">
+          <hr class="mt-2" />
+      </div>
+    {% set settings =
+    {
+        lastSegmentTitle: element.customMenuTitle ?? title,
+        
+    }
+%}
+ {# Get the user's search query from the 'q' query-string param #}
+  {% set searchQuery = craft.app.request.getParam('q') %}
+
+ {% set limit = 10 %}
+{% set entries = craft.entries()
+    .search(searchQuery)
+    .orderBy('score')
+    .limit(limit) %}
+      <div class="col-8 mt-5">
+            <div class="row">
+<div class="col-8 col-md-6 col-lg-6"><h1 class="title-name">Paieškos rezultatai</h3></div> 
+<div class="col-8 col-md-6 col-lg-6"><ul class="title-meniu">
+<li>{{ entries|length }} results:</li>
+</ul></div>
+</div>
+      <div class="row">
+
+
+{# Paginate the entries #}
+{% paginate entries as pageInfo, pageEntries %}
+{% set entries = craft.expandedSearch.search(searchQuery, {
+    length: 1000,
+    offset: (pageInfo.currentPage - 1) * limit,
+    limit: limit
+}) %}
+
+  {% if entries|length %}
+
+      {% for entry in pageEntries %}
+ <div class="col-6 col-md-6 col-lg-4 mt-5 ajaxDataDump">
+{% include 'blocks/_article-n-cat'  %}
+</div>
+
+{% endfor %}
+
+      
+
+  {% endif %}
+
+</div>
+{% if pageInfo.prevUrl or pageInfo.nextUrl %}
+            {% if pageInfo.prevUrl %}<a href="{{ pageInfo.prevUrl }}?q={{ searchQuery }}">Previous Page</a>{% endif %}
+            {% for page, url in pageInfo.getPrevUrls(2) %}
+                <a href="{{ url }}">{{ page }}</a>
+            {% endfor %}
+            {{ pageInfo.currentPage }}
+            {% for page, url in pageInfo.getNextUrls(2) %}
+                <a href="{{ url }}">{{ page }}</a>
+            {% endfor %}
+            {% if pageInfo.nextUrl %}<a href="{{ pageInfo.nextUrl }}">Next Page</a>{% endif %}
+            
+      {% endif %}
+    
+</div>
+<div class="col-4 mt-5">
+<div class="block mt-5 mt-md-0">
+      <h3 class="block-title has-badge mb-3">
+       <span>Dienos skaitomiausi</span>
+      </h3>
+
+      <div class="top-list">
+{% set myEntryQuery = craft.entries.section('articles').orderByPopular('total', 1).limit(5) %}
+
+
+{# Fetch the entries #}
+{% set entries = myEntryQuery.all() %}
+{% for entry in entries %}
+{% include 'blocks/_article-small'  %}
+    {% endfor %}
+          
+              </div>
+    </div> 
+ <div class="sticky-advert mt-5">{{ craft.adWizard.displayAd(38297) }}</div>
+ </div>
+</div></div>
+</div>
+
+    </div>
+  </div>
+
+{% endblock %}
